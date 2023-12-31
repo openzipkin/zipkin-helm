@@ -1,6 +1,6 @@
 # yamllint --format github .github/workflows/test.yml
 ---
-name: helm_test
+name: test
 
 # We test the helm chart including an apply following the steps described in
 # https://github.com/helm/chart-testing-action

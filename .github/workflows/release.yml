@@ -1,6 +1,6 @@
 # yamllint --format github .github/workflows/release.yml
 ---
-name: helm_release
+name: release
 
 # We release helm_charts into https://github.com/openzipkin/zipkin/blob/gh-pages/index.yaml
 
