@@ -14,6 +14,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Prevent use of implicit GitHub Actions read-only token GITHUB_TOKEN.
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: Configure Git
         run: | # Allocate commits to CI, not the owner of the deploy key
@@ -30,9 +33,8 @@ jobs:
 
       - name: Prepare release
         run: |
-          git remote set-url origin https://${{ secrets.GH_TOKEN }}:x-oauth-basic@github.com/$GITHUB_REPOSITORY.git
+          build-bin/git/login_git &&
           build-bin/helm/helm_prepare $(echo ${GITHUB_REF} | cut -d/ -f 3) ${{ steps.appVersion.outputs.tag }}
-          git remote set-url origin https://github.com/$GITHUB_REPOSITORY.git
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
