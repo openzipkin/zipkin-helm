@@ -7,13 +7,10 @@ name: helm_test
 
 # We don't test documentation-only commits.
 on:
-  # We run tests on non-tagged pushes to master that aren't a commit made by the release plugin
   push:
-    tags: ""
     branches: master
     paths-ignore:
       - "**/*.md"
-  # We also run tests on pull requests targeted at the master branch.
   pull_request:
     branches: master
     paths-ignore:
@@ -25,9 +22,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'  # to see origin/master
 
       - name: Configure Git
-        run: |
+        run: |  # not zipkinci as this is for testing
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
