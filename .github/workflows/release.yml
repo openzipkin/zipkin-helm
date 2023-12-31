@@ -32,7 +32,15 @@ jobs:
         id: appVersion
 
       - name: Prepare release
-        run: |
+        env:
+          # GH_USER=<user that created GH_TOKEN>
+          GH_USER: ${{ secrets.GH_USER }}
+          # GH_TOKEN=<hex token value>
+          #   - makes release commits and tags
+          #   - needs repo:status, public_repo
+          #   - referenced in .settings.xml
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |  # GITHUB_REF will be refs/tags/release-MAJOR.MINOR.PATCH
           build-bin/git/login_git &&
           build-bin/helm/helm_prepare $(echo ${GITHUB_REF} | cut -d/ -f 3) ${{ steps.appVersion.outputs.tag }}
 
