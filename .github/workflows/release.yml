@@ -16,9 +16,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Configure Git
-        run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+        run: | # Allocate commits to CI, not the owner of the deploy key
+          git config user.name "zipkinci"
+          git config user.email "zipkinci+zipkin-dev@googlegroups.com"
 
       - name: Get latest zipkin version
         uses: oprypin/find-latest-tag@v1
