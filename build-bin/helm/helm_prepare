@@ -1,6 +1,6 @@
 #!/bin/sh -ue
 #
-# Copyright 2015-2022 The OpenZipkin Authors
+# Copyright 2023 The OpenZipkin Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -15,8 +15,8 @@
 
 # This script prepares the helm chart for a release by updating the versions in the chart file.
 
-trigger_tag=${1?trigger_tag is required. Ex release-chart-1.2.3}
-release_version=$(build-bin/git/version_from_trigger_tag release-chart- ${trigger_tag})
+trigger_tag=${1?trigger_tag is required. Ex release-1.2.3}
+release_version=$(build-bin/git/version_from_trigger_tag release- ${trigger_tag})
 release_branch=${3:-master}
 
 # Checkout master, as we release from master, not a tag ref
@@ -33,13 +33,13 @@ fi
 
 # Update appVersion
 latest_app_version=${2?latest_app_version is required. Ex 4.5.6}
-sh -c "sed -i 's/appVersion\:\s[0-9.]\+/appVersion\: ${latest_app_version}/g' ./charts/zipkin/Chart.yaml"
+sh -c "sed -i 's/appVersion\:\s[0-9.]\+/appVersion\: ${latest_app_version}/g' Chart.yaml"
 
 # Update version
-sh -c "sed -i 's/version\:\s[0-9.]\+/version\: ${release_version}/g' ./charts/zipkin/Chart.yaml"
+sh -c "sed -i 's/version\:\s[0-9.]\+/version\: ${release_version}/g' Chart.yaml"
 
-# Commit changes to ./charts/zipkin/Chart.yaml
-git add ./charts/zipkin/Chart.yaml && git commit -m "chore: prepare chart release ${release_version}"
+# Commit changes to Chart.yaml
+git add Chart.yaml && git commit -m "chore: prepare chart release ${release_version}"
 
-# Push the changes in ./charts/zipkin/Chart.yaml to the release branch
+# Push the changes in Chart.yaml to the release branch
 git push origin ${release_branch}
