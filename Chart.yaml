@@ -1,4 +1,4 @@
-# Copyright 2015-2022 The OpenZipkin Authors
+# Copyright 2023 The OpenZipkin Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -10,11 +10,11 @@
 # or implied. See the License for the specific language governing permissions and limitations under
 # the License.
 apiVersion: v2
-appVersion: 2.24.1
+appVersion: 2.26.0
 name: zipkin
 description: A Zipkin helm chart for kubernetes
 type: application
-version: 0.7.0
+version: 0.1.0
 maintainers:
   - name: openzipkin
     email: zipkin-dev@googlegroups.com

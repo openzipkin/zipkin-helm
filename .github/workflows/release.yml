@@ -1,4 +1,4 @@
-# yamllint --format github .github/workflows/helm_release.yml
+# yamllint --format github .github/workflows/release.yml
 ---
 name: helm_release
 
@@ -6,7 +6,7 @@ name: helm_release
 
 on:
   push:
-    tags: "release-chart-[0-9]+.[0-9]+.[0-9]+**"
+    tags: "release-[0-9]+.[0-9]+.[0-9]+**"
 
 jobs:
   release:
@@ -20,7 +20,8 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - uses: oprypin/find-latest-tag@v1
+      - name: Get latest zipkin version
+        uses: oprypin/find-latest-tag@v1
         with:
           repository: openzipkin/zipkin
           releases-only: true
@@ -35,8 +36,6 @@ jobs:
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
-        with:
-          charts_dir: charts
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
