@@ -48,6 +48,8 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           env:
+            - name: SELF_TRACING_ENABLED
+              value: "{{ .Values.zipkin.selfTracing.enabled }}"
             - name: STORAGE_TYPE
               value: "{{ .Values.zipkin.storage.type }}"
             {{- if eq .Values.zipkin.storage.type "elasticsearch" }}

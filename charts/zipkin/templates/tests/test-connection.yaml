@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "zipkin.fullname" . }}-test-connection"
+  labels:
+    {{- include "zipkin.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: get-api-services
+      image: 'ghcr.io/openzipkin/alpine:3.19.1'
+      command: [ '/bin/sh', '-c' ]
+      # Get an arbitrary API endpoint using the ClusterIP and service port
+      args: [ 'wget -qO ---spider --header "b3: cafebabecafebabe-cafebabecafebabe-1" http://{{ include "zipkin.fullname" . }}:{{ .Values.service.port }}/api/v2/services' ]
+{{- if .Values.zipkin.selfTracing.enabled }}
+    - name: get-trace
+      image: 'ghcr.io/openzipkin/alpine:3.19.1'
+      command: [ '/bin/sh', '-c' ]
+      # If self-tracing, sleep for the trace to process, the get it by the constant ID passed above.
+      args: [ 'sleep 1 && wget -qO ---spider http://{{ include "zipkin.fullname" . }}:{{ .Values.service.port }}/api/v2/trace/cafebabecafebabe' ]
+{{- end }}
+  restartPolicy: Never
