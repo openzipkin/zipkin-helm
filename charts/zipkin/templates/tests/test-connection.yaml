@@ -18,6 +18,6 @@ spec:
       image: 'ghcr.io/openzipkin/alpine:3.19.1'
       command: [ '/bin/sh', '-c' ]
       # If self-tracing, sleep for the trace to process. Then, get it by the constant ID passed above.
-      args: [ 'sleep 1 && wget -qO ---spider http://{{ include "zipkin.fullname" . }}:{{ .Values.service.port }}/api/v2/trace/cafebabecafebabe' ]
+      args: [ 'sleep 3 && wget -qO ---spider http://{{ include "zipkin.fullname" . }}:{{ .Values.service.port }}/api/v2/trace/cafebabecafebabe' ]
 {{- end }}
   restartPolicy: Never
