@@ -1,0 +1,4 @@
+---
+zipkin:
+  selfTracing:
+    enabled: true

@@ -39,7 +39,7 @@ podAnnotations:
 
 podSecurityContext:
   {}
-  # fsGroup: 2000
+# fsGroup: 2000
 
 securityContext:
   # capabilities:
@@ -58,7 +58,7 @@ ingress:
   annotations:
     {}
     # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  # kubernetes.io/tls-acme: "true"
   # className: nginx
   host: chart-example.local
   path: /
@@ -101,11 +101,14 @@ affinity: {}
 priorityClassName: ""
 
 zipkin:
+  # selfTracing generates traces for HTTP paths under /api
+  selfTracing:
+    enabled: false
   storage:
     type: mem
-#   type: elasticsearch
-#   elasticsearch:
-#      hosts: hostA hostB
-#      index: fooIndex
+  #   type: elasticsearch
+  #   elasticsearch:
+  #      hosts: hostA hostB
+  #      index: fooIndex
   extraEnv: {}
 #    JAVA_OPTS: "-Xms128m -Xmx512m -XX:+ExitOnOutOfMemoryError"
