@@ -1,0 +1,39 @@
+
+{{- if eq .Values.zipkin.storage.type "elasticsearch" }}
+{{- if .Values.zipkin.dependencyJob.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Values.zipkin.dependencyJob.jobName }}-job
+  namespace: {{ include "zipkin.namespace" . }}
+spec:
+  schedule: "{{ .Values.zipkin.dependencyJob.schedule }}"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: "{{ .Values.zipkin.dependencyJob.successfulJobsHistoryLimit }}"
+  failedJobsHistoryLimit: "{{ .Values.zipkin.dependencyJob.failedJobsHistoryLimit }}"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: job
+              image: "{{ .Values.zipkin.dependencyJob.image.repository }}:{{ .Values.zipkin.dependencyJob.image.tag }}"
+              imagePullPolicy: {{ .Values.zipkin.dependencyJob.image.pullPolicy }}
+              env: 
+                - name: STORAGE_TYPE
+                  value: {{ .Values.zipkin.storage.type }}
+                {{- if eq .Values.zipkin.storage.type "elasticsearch" }}
+
+                {{- if .Values.zipkin.storage.elasticsearch.hosts }}
+                - name: ES_HOSTS
+                  value: {{ .Values.zipkin.storage.elasticsearch.hosts }}
+                {{- end }}
+                {{- if .Values.zipkin.storage.elasticsearch.hosts }}
+                - name: ES_INDEX
+                  value: {{ .Values.zipkin.storage.elasticsearch.index }}
+                {{- end }}
+
+                {{- end }}
+          restartPolicy: Never
+{{- end }}
+{{- end }}
