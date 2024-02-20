@@ -48,22 +48,32 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           env:
+            {{- if .Values.zipkin.selfTracing.enabled }}
             - name: SELF_TRACING_ENABLED
-              value: "{{ .Values.zipkin.selfTracing.enabled }}"
+              value: "true"
+            {{- end }}
             - name: STORAGE_TYPE
               value: "{{ .Values.zipkin.storage.type }}"
             {{- if eq .Values.zipkin.storage.type "elasticsearch" }}
             {{- with .Values.zipkin.storage.elasticsearch }}
             - name: ES_HOSTS
-              value: "{{ .hosts }}"
+              value: {{ .hosts | quote }}
+            {{- if .index }}
             - name: ES_INDEX
-              value: "{{ .index }}"
+              value: {{ .index | quote }}
+            {{- end }}
+            {{- if .username }}
             - name: ES_USERNAME
-              value: "{{ .username }}"
+              value: {{ .username | quote }}
+            {{- end }}
+            {{- if .password }}
             - name: ES_PASSWORD
-              value: "{{ .password }}"
+              value: {{ .password | quote }}
+            {{- end }}
+            {{- if .sslNoVerify }}
             - name: ES_SSL_NO_VERIFY
-              value: "{{ default false .sslNoVerify }}"
+              value: "true"
+            {{- end }}
             {{- end }}
             {{- end }}
             {{- range $key, $value := .Values.zipkin.extraEnv }}
@@ -79,6 +89,7 @@ spec:
             periodSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+        {{- include "zipkin.extraContainers" . | nindent 6 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

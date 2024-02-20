@@ -81,3 +81,14 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Add extra containers to the pod spec
+*/}}
+{{- define "zipkin.extraContainers" -}}
+{{- if .Values.extraContainers }}
+{{- with .Values.extraContainers }}
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end }}
