@@ -58,6 +58,22 @@ service:
   type: ClusterIP
   port: 9411
 
+
+serviceMonitor:
+  # If `true`, a ServiceMonitor resource for the zipkin is created
+  enabled: true
+  # Additional labels for the ServiceMonitor
+  labels: {}
+    # release: prometheus
+  # Interval at which Prometheus scrapes metrics
+  interval: 10s
+  # Timeout for scraping
+  scrapeTimeout: 10s
+  # The path at which metrics are served
+  path: '/prometheus'
+  # The Service port at which metrics are served
+  port: http-query
+
 ingress:
   enabled: false
   annotations:
