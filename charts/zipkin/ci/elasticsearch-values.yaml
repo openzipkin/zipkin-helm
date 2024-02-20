@@ -1,0 +1,13 @@
+---
+zipkin:
+  storage:
+    type: elasticsearch
+    elasticsearch:
+      hosts: http://localhost:9200
+
+# extra containers are in the same pod, so accessible by localhost
+extraContainers:
+  - name: elasticsearch
+    image: 'ghcr.io/openzipkin/zipkin-elasticsearch8'
+    ports:
+      - containerPort: 9200

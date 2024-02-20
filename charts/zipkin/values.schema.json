@@ -22,6 +22,19 @@
                 }
             }
         },
+        "extraContainers": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    }
+                },
+                "required": ["name"]
+            }
+        },
         "fullnameOverride": {
             "type": "string"
         },
@@ -182,7 +195,7 @@
                                     "type": "string"
                                 }
                             },
-                            "required": ["hosts", "index"]
+                            "required": ["hosts"]
                         },
                         "type": {
                             "enum": ["mem", "elasticsearch"]
@@ -203,9 +216,9 @@
                         }
                     ]
                 },
-		"extraEnv": {
-			"type": "object"
-		}
+                "extraEnv": {
+                    "type": "object"
+                }
             }
         }
     }

@@ -112,3 +112,6 @@ zipkin:
   #      index: fooIndex
   extraEnv: {}
 #    JAVA_OPTS: "-Xms128m -Xmx512m -XX:+ExitOnOutOfMemoryError"
+
+# extra containers to add to the same pod (accessible via localhost)
+extraContainers: []
