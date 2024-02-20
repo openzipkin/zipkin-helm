@@ -9,16 +9,23 @@ metadata:
     "helm.sh/hook": test
 spec:
   containers:
-    - name: get-api-services
+{{- if .Values.zipkin.discovery.eureka }}
+    - name: verify-eureka
       image: 'ghcr.io/openzipkin/alpine:3.19.1'
       command: [ '/bin/sh', '-c' ]
+      # Make sure zipkin registered in Eureka at startup
+      args: [ 'wget -q --spider http://{{ include "zipkin.fullname" . }}:8761/eureka/v2/apps/ZIPKIN' ]
+{{- end }}
+    - name: get-api
+      image: "ghcr.io/openzipkin/alpine:3.19.1"
+      command: [ '/bin/sh', '-c' ]
       # Get an arbitrary API endpoint using the ClusterIP and service port
-      args: [ 'wget -qO ---spider --header "b3: cafebabecafebabe-cafebabecafebabe-1" http://{{ include "zipkin.fullname" . }}:{{ .Values.service.port }}/api/v2/services' ]
+      args: [ 'wget -q --spider --header "b3: cafebabecafebabe-cafebabecafebabe-1" http://{{ include "zipkin.fullname" . }}:{{ .Values.service.port }}/api/v2/services' ]
 {{- if .Values.zipkin.selfTracing.enabled }}
     - name: get-trace
       image: 'ghcr.io/openzipkin/alpine:3.19.1'
       command: [ '/bin/sh', '-c' ]
       # If self-tracing, sleep for the trace to process. Then, get it by the constant ID passed above.
-      args: [ 'sleep 3 && wget -qO ---spider http://{{ include "zipkin.fullname" . }}:{{ .Values.service.port }}/api/v2/trace/cafebabecafebabe' ]
+      args: [ 'sleep 3 && wget -q --spider http://{{ include "zipkin.fullname" . }}:{{ .Values.service.port }}/api/v2/trace/cafebabecafebabe' ]
 {{- end }}
   restartPolicy: Never

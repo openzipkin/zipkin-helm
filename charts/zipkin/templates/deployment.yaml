@@ -47,10 +47,40 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          {{- if .Values.command }}
+          command:
+            {{- range .Values.command }}
+            - {{ . }}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.args }}
+          args:
+            {{- range .Values.args }}
+            - {{ . }}
+            {{- end }}
+          {{- end }}
           env:
             {{- if .Values.zipkin.selfTracing.enabled }}
             - name: SELF_TRACING_ENABLED
               value: "true"
+            {{- end }}
+            {{- if .Values.zipkin.discovery.eureka }}
+            {{- with .Values.zipkin.discovery.eureka }}
+            - name: EUREKA_SERVICE_URL
+              value: {{ .serviceUrl | quote }}
+            {{- if .app }}
+            - name: EUREKA_APP_NAME
+              value: {{ .app | quote }}
+            {{- end }}
+            {{- if .hostName }}
+            - name: EUREKA_APP_NAME
+              value: {{ .hostName | quote }}
+            {{- end }}
+            {{- if .instanceId }}
+            - name: EUREKA_INSTANCE_ID
+              value: {{ .instanceId | quote }}
+            {{- end }}
+            {{- end }}
             {{- end }}
             - name: STORAGE_TYPE
               value: "{{ .Values.zipkin.storage.type }}"

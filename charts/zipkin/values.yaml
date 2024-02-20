@@ -18,6 +18,11 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+# Zipkin start command
+command: ["start-zipkin"]
+# Arguments to pass to the zipkin start command
+args: []
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -101,6 +106,7 @@ affinity: {}
 priorityClassName: ""
 
 zipkin:
+  discovery: {}
   # selfTracing generates traces for HTTP paths under /api
   selfTracing:
     enabled: false
@@ -113,5 +119,13 @@ zipkin:
   extraEnv: {}
 #    JAVA_OPTS: "-Xms128m -Xmx512m -XX:+ExitOnOutOfMemoryError"
 
-# extra containers to add to the same pod (accessible via localhost)
+# The below are typically only used in tests:
+# extra containers to add to the same pod.
 extraContainers: []
+
+# extra ports to add besides the default service.port
+extraServicePorts: []
+#  - port: 9410
+#    targetPort: 9410
+#    protocol: TCP
+#    name: scribe

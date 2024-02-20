@@ -1,0 +1,27 @@
+---
+# To avoid a race, sleep until Eureka is running before starting zipkin.
+command: ['/bin/sh', '-c']
+args:
+  - 'while ! wget -q --spider http://localhost:8761/eureka/v2/apps;do sleep 1; done && start-zipkin'
+
+zipkin:
+  discovery:
+    eureka:
+      serviceUrl: http://localhost:8761/eureka/v2
+      hostName: zipkin
+
+# extra containers are in the same pod, so this means Eureka is accessible to
+# zipkin via localhost.
+extraContainers:
+  - name: eureka
+    image: 'ghcr.io/openzipkin/zipkin-eureka'
+    ports:
+      - containerPort: 8761
+
+# test-connection runs in a different pod, so it can't verify Eureka unless we
+# expose a service port.
+extraServicePorts:
+  - port: 8761
+    targetPort: 8761
+    protocol: TCP
+    name: eureka
