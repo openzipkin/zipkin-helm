@@ -92,3 +92,14 @@ Add extra containers to the pod spec
 {{- end }}
 {{- end }}
 {{- end }}
+
+{{/*
+Add extra ports to the pod spec
+*/}}
+{{- define "zipkin.extraServicePorts" -}}
+{{- if .Values.extraServicePorts }}
+{{- with .Values.extraServicePorts }}
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end }}

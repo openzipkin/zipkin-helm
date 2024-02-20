@@ -25,5 +25,6 @@ spec:
       targetPort: 9411
       protocol: TCP
       name: http-query
+    {{- include "zipkin.extraServicePorts" . | nindent 2 }}
   selector:
     {{- include "zipkin.selectorLabels" . | nindent 4 }}

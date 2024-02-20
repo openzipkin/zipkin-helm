@@ -1,0 +1,8 @@
+---
+# Tests use a different pod and access zipkin via its service port.
+# This makes sure we can change this to a value different from what the
+# container listens on (9411).
+service:
+  port: 9413
+
+zipkin: {}

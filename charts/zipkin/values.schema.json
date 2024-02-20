@@ -5,6 +5,13 @@
         "affinity": {
             "type": "object"
         },
+        "args": {
+            "description": "Arguments to the zipkin start command",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
         "autoscaling": {
             "type": "object",
             "properties": {
@@ -19,6 +26,26 @@
                 },
                 "targetCPUUtilizationPercentage": {
                     "type": "integer"
+                }
+            }
+        },
+        "command": {
+            "description": "Zipkin start command",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "extraServicePorts": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                    "name": {"type": "string"},
+                    "protocol": {"enum": ["TCP", "UDP", "SCTP"]},
+                    "port": {"type": "integer"},
+                    "targetPort": {"type": "integer"}
                 }
             }
         },
@@ -173,6 +200,36 @@
         "zipkin": {
             "type": "object",
             "properties": {
+                "discovery": {
+                    "type": "object",
+                    "properties": {
+                        "eureka": {
+                            "type": "object",
+                            "properties": {
+                                "serviceUrl": {
+                                    "type": "string"
+                                },
+                                "app": {
+                                    "type": "string"
+                                },
+                                "hostName": {
+                                    "type": "string"
+                                },
+                                "instanceId": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "serviceUrl"
+                            ]
+                        },
+                        "type": {
+                            "enum": [
+                                "eureka"
+                            ]
+                        }
+                    }
+                },
                 "storage": {
                     "type": "object",
                     "properties": {
