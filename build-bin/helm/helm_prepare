@@ -14,6 +14,9 @@
 #
 
 # This script prepares the helm chart for a release by updating the versions in the chart file.
+#
+# Note: helm/chart-releaser-action silently fails if there is no change made here.
+# Hence, we should never update the chart version manually.
 
 trigger_tag=${1?trigger_tag is required. Ex release-1.2.3}
 release_version=$(build-bin/git/version_from_trigger_tag release- ${trigger_tag})
@@ -39,9 +42,7 @@ sh -c "sed -i 's/appVersion\:\s[0-9.]\+/appVersion\: ${latest_app_version}/g' ./
 sh -c "sed -i 's/version\:\s[0-9.]\+/version\: ${release_version}/g' ./charts/zipkin/Chart.yaml"
 
 # Commit changes to ./charts/zipkin/Chart.yaml
-git add ./charts/zipkin/Chart.yaml
+git add ./charts/zipkin/Chart.yaml && git commit -m "release: zipkin-${release_version}"
 
-if git commit -m "release: updates for ${release_version}"; then
-  # Push the changes in ./charts/zipkin/Chart.yaml to the release branch
-  git push origin ${release_branch}
-fi
+# Push the changes in ./charts/zipkin/Chart.yaml to the release branch
+git push origin ${release_branch}
