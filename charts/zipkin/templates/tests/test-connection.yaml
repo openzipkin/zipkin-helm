@@ -16,13 +16,31 @@ spec:
       # Make sure zipkin registered in Eureka at startup
       args: [ 'wget -q --spider http://{{ include "zipkin.fullname" . }}:8761/eureka/v2/apps/ZIPKIN' ]
 {{- end }}
+{{ if .Values.global.testDependencies }}
+    - name: get-frontend
+      image: "ghcr.io/openzipkin/alpine:3.19.1"
+      command: [ '/bin/sh', '-c' ]
+      args:  # Get the frontend service 3 times, after it is ready
+        - >
+           while ! wget -q --spider http://{{ include "zipkin.fullname" . }}:8081/health;do sleep 1; done &&
+           for i in 1 2 3;do wget -q --spider http://{{ include "zipkin.fullname" . }}:8081; done
+    - name: get-dependencies
+      image: 'ghcr.io/openzipkin/alpine:3.19.1'
+      command: [ '/bin/sh', '-c' ]
+      args:  # Sleep for the trace to process, then get dependencies based on it
+        - >
+          echo '[{"parent":"frontend","child":"backend","callCount":3}]' > want.json &&
+          sleep 3 &&
+          wget -qO have.json --header "b3: 0" http://{{ include "zipkin.fullname" . }}:{{ .Values.service.port }}/api/v2/dependencies?endTs=$(( $(date +%s) * 1000 )) &&
+          diff -b want.json have.json
+{{ end }}
     - name: get-api
       image: "ghcr.io/openzipkin/alpine:3.19.1"
       command: [ '/bin/sh', '-c' ]
       # Get an arbitrary API endpoint using the ClusterIP and service port
       args: [ 'wget -q --spider --header "b3: cafebabecafebabe-cafebabecafebabe-1" http://{{ include "zipkin.fullname" . }}:{{ .Values.service.port }}/api/v2/services' ]
 {{- if .Values.zipkin.selfTracing.enabled }}
-    - name: get-trace
+    - name: get-self-trace
       image: 'ghcr.io/openzipkin/alpine:3.19.1'
       command: [ '/bin/sh', '-c' ]
       # If self-tracing, sleep for the trace to process. Then, get it by the constant ID passed above.

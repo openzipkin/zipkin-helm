@@ -129,3 +129,6 @@ extraServicePorts: []
 #    targetPort: 9410
 #    protocol: TCP
 #    name: scribe
+
+# global variables to use in values. typically used in tests.
+global: {}

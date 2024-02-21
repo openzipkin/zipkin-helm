@@ -65,6 +65,9 @@
         "fullnameOverride": {
             "type": "string"
         },
+        "global": {
+            "type": "object"
+        },
         "image": {
             "type": "object",
             "properties": {
