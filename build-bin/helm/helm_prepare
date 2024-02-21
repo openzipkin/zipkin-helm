@@ -41,7 +41,7 @@ sh -c "sed -i 's/version\:\s[0-9.]\+/version\: ${release_version}/g' ./charts/zi
 # Commit changes to ./charts/zipkin/Chart.yaml
 git add ./charts/zipkin/Chart.yaml
 
-if git commit -m "chore: prepare chart release ${release_version}"; then
+if git commit -m "release: updates for ${release_version}"; then
   # Push the changes in ./charts/zipkin/Chart.yaml to the release branch
   git push origin ${release_branch}
 fi
