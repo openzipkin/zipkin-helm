@@ -1,0 +1,45 @@
+---
+global:
+  testDependencies: true
+
+# extra containers are in the same pod, so this means zipkin is accessible to
+# the example services by localhost (default)
+extraContainers:
+  - name: frontend
+    image: 'ghcr.io/openzipkin/brave-example:armeria'
+    command: ['start-frontend']
+    ports:
+      - containerPort: 8081
+    env:
+      - name: 'ZIPKIN_BASEURL'
+        value: 'http://localhost:9411/'
+      - name: 'BACKEND_ENDPOINT'
+        value: 'http://localhost:9000/api'
+    readinessProbe:
+      httpGet:
+        path: /health
+        port: 8081
+      initialDelaySeconds: 5
+      periodSeconds: 5
+  - name: backend
+    image: 'ghcr.io/openzipkin/brave-example:armeria'
+    command: ['start-backend']
+    ports:
+      - containerPort: 9000
+    env:
+      - name: 'ZIPKIN_BASEURL'
+        value: 'http://localhost:9411/'
+    readinessProbe:
+      httpGet:
+        path: /health
+        port: 9000
+      initialDelaySeconds: 5
+      periodSeconds: 5
+
+# test-connection runs in a different pod, so it can't hit the frontend unless
+# we expose a service port.
+extraServicePorts:
+  - port: 8081
+    targetPort: 8081
+    protocol: TCP
+    name: frontend
