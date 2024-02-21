@@ -17,6 +17,7 @@
 
 trigger_tag=${1?trigger_tag is required. Ex release-1.2.3}
 release_version=$(build-bin/git/version_from_trigger_tag release- ${trigger_tag})
+latest_app_version=${2?latest_app_version is required. Ex 4.5.6}
 release_branch=${3:-master}
 
 # Checkout master, as we release from master, not a tag ref
@@ -32,14 +33,15 @@ if [ "$commit_local_release_branch" != "$commit_remote_release_branch" ]; then
 fi
 
 # Update appVersion
-latest_app_version=${2?latest_app_version is required. Ex 4.5.6}
 sh -c "sed -i 's/appVersion\:\s[0-9.]\+/appVersion\: ${latest_app_version}/g' ./charts/zipkin/Chart.yaml"
 
 # Update version
 sh -c "sed -i 's/version\:\s[0-9.]\+/version\: ${release_version}/g' ./charts/zipkin/Chart.yaml"
 
 # Commit changes to ./charts/zipkin/Chart.yaml
-git add ./charts/zipkin/Chart.yaml && git commit -m "chore: prepare chart release ${release_version}"
+git add ./charts/zipkin/Chart.yaml
 
-# Push the changes in ./charts/zipkin/Chart.yaml to the release branch
-git push origin ${release_branch}
+if git commit -m "chore: prepare chart release ${release_version}"; then
+  # Push the changes in ./charts/zipkin/Chart.yaml to the release branch
+  git push origin ${release_branch}
+fi
