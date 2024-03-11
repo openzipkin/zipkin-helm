@@ -1,0 +1,5 @@
+---
+serviceMonitor:
+  enabled: true
+  interval: 1s
+  scrapeTimeout: 2s
