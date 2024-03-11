@@ -15,7 +15,7 @@ the License.
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "zipkin.serviceAccountName" . }}
+  name: {{ include "zipkin.fullname" . }}
   namespace: {{ include "zipkin.namespace" . }}
   labels:
     {{- include "zipkin.labels" . | nindent 4 }}

@@ -1,0 +1,24 @@
+---
+# install via `helmfile -f charts/zipkin/ci/helmfile.yaml sync`
+repositories:
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
+
+# Prometheus is too much to configure manually in a test yaml. We need the CRD
+# servicemonitors.monitoring.coreos.com as well as Prometheus, deployed as the
+# service named "prometheus-operated" in our test namespace "ci-monitoring"
+releases:
+  - name: prometheus-stack
+    namespace: ci-monitoring
+    createNamespace: true
+    chart: prometheus-community/kube-prometheus-stack
+    # Reduce size of this test stack by disabling dependencies we don't use.
+    values:
+      - alertmanager:
+          enabled: false
+      - grafana:
+          enabled: false
+      - nodeExporter:
+          enabled: false
+      - kubeletService:
+          enabled: false

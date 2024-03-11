@@ -46,4 +46,14 @@ spec:
       # If self-tracing, sleep for the trace to process. Then, get it by the constant ID passed above.
       args: [ 'sleep 3 && wget -q --spider http://{{ include "zipkin.fullname" . }}:{{ .Values.service.port }}/api/v2/trace/cafebabecafebabe' ]
 {{- end }}
+{{- if .Values.serviceMonitor.enabled }}
+    - name: get-prometheus-query
+      image: 'ghcr.io/openzipkin/alpine:3.19.1'
+      command: [ '/bin/sh', '-c' ]
+      # If using a service monitor, wait for the scrape interval and check for a statistic.
+      # This uses prometheus-operated in the ci-monitoring namespace, from helmfile.yaml.
+      # Note: The query API returns HTTP 200 on empty, so we grep to ensure something returned.
+      # See https://prometheus.io/docs/prometheus/latest/querying/api/
+      args: [ 'sleep 5 && wget -q -O - http://prometheus-operated.ci-monitoring.svc.cluster.local:9090/api/v1/query?query=http_server_requests_seconds_max | grep zipkin' ]
+{{- end }}
   restartPolicy: Never
