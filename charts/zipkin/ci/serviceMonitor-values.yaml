@@ -2,4 +2,5 @@
 serviceMonitor:
   enabled: true
   interval: 1s
-  scrapeTimeout: 2s
+  scrapeTimeout: 1s
+  namespace: ci-monitoring

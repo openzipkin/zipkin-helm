@@ -12,13 +12,42 @@ releases:
     namespace: ci-monitoring
     createNamespace: true
     chart: prometheus-community/kube-prometheus-stack
-    # Reduce size of this test stack by disabling dependencies we don't use.
     values:
-      - alertmanager:
+      - prometheusOperator:
+          enabled: true
+        prometheus:
+          enabled: true
+          prometheusSpec:
+            # Allow any namespace and any values
+            serviceMonitorNamespaceSelector:
+              any: true
+            serviceMonitorSelector:
+              any: true
+            serviceMonitorSelectorNilUsesHelmValues: false
+        # Disable anything else, like multi-container grafana pods.
+        defaultRules:
           enabled: false
-      - grafana:
+        alertmanager:
           enabled: false
-      - nodeExporter:
+        kubeApiServer:
           enabled: false
-      - kubeletService:
+        kubelet:
+          enabled: false
+        kubeControllerManager:
+          enabled: false
+        coreDns:
+          enabled: false
+        kubeDns:
+          enabled: false
+        kubeEtcd:
+          enabled: false
+        kubeScheduler:
+          enabled: false
+        kubeProxy:
+          enabled: false
+        kubeStateMetrics:
+          enabled: false
+        nodeExporter:
+          enabled: false
+        grafana:
           enabled: false

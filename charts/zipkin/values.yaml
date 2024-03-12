@@ -60,11 +60,14 @@ service:
 
 serviceMonitor:
   # Creates a ServiceMonitor to scrape /prometheus
-  # You must have the prometheus-operator installed to set this to true
   enabled: false
-  labels: {}
+  # Namespace to create the service monitor in
+  namespace: ""
   #  interval: 10s
   #  scrapeTimeout: 10s
+  # Add any labels required by your prometheus spec serviceMonitorSelector
+  labels: {}
+  #    release: prometheus
 
 ingress:
   enabled: false
