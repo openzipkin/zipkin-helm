@@ -38,16 +38,6 @@ spec:
       command: [ '/bin/sh', '-c' ]
       # Get an arbitrary API endpoint using the ClusterIP and service port
       args: [ 'wget -q --spider --header "b3: cafebabecafebabe-cafebabecafebabe-1" http://{{ include "zipkin.fullname" . }}:{{ .Values.service.port }}/api/v2/services' ]
-    - name: get-api2
-      image: "ghcr.io/openzipkin/alpine:3.19.1"
-      command: [ '/bin/sh', '-c' ]
-      # Get an arbitrary API endpoint using the ClusterIP and service port
-      args: [ 'wget -q --spider --header "b3: cafebabecafebabe-cafebabecafebabe-1" http://{{ include "zipkin.fullname" . }}:{{ .Values.service.port }}/api/v2/services' ]
-    - name: get-api3
-      image: "ghcr.io/openzipkin/alpine:3.19.1"
-      command: [ '/bin/sh', '-c' ]
-      # Get an arbitrary API endpoint using the ClusterIP and service port
-      args: [ 'wget -q --spider --header "b3: cafebabecafebabe-cafebabecafebabe-1" http://{{ include "zipkin.fullname" . }}:{{ .Values.service.port }}/api/v2/services' ]
 {{- if .Values.zipkin.selfTracing.enabled }}
     - name: get-self-trace
       image: 'ghcr.io/openzipkin/alpine:3.19.1'
