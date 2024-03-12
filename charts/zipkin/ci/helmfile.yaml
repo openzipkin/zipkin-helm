@@ -9,7 +9,7 @@ repositories:
 # service named "prometheus-operated" in our test namespace "ci-monitoring"
 releases:
   - name: prometheus-stack
-    namespace: ci-monitoring
+    namespace: ci-monitoring  # arbitrary non-default name
     createNamespace: true
     chart: prometheus-community/kube-prometheus-stack
     values:
@@ -17,8 +17,10 @@ releases:
           enabled: true
         prometheus:
           enabled: true
+          # By default, the service monitor has namespace restrictions and must
+          # match a label "release: kube-prometheus-stack". Relax for testing.
+          # See https://prometheus-operator.dev/docs/operator/troubleshooting/#it-is-in-the-configuration-but-not-on-the-service-discovery-page
           prometheusSpec:
-            # Allow any namespace and any values
             serviceMonitorNamespaceSelector:
               any: true
             serviceMonitorSelector:
