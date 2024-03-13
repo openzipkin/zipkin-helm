@@ -197,6 +197,26 @@
                 }
             }
         },
+        "serviceMonitor": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "interval": {
+                    "type": "string"
+                },
+                "labels": {
+                    "type": "object"
+                },
+                "namespace": {
+                    "type": "string"
+                },
+                "scrapeTimeout": {
+                    "type": "string"
+                }
+            }
+        },
         "tolerations": {
             "type": "array"
         },

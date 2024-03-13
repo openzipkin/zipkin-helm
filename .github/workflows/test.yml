@@ -58,5 +58,11 @@ jobs:
         uses: helm/kind-action@v1
         if: steps.list-changed.outputs.changed == 'true'
 
+      - name: Setup helmfile
+        uses: mamezou-tech/setup-helmfile@v2.0.0
+
+      - name: Install prometheus
+        run: helmfile -f charts/zipkin/ci/helmfile.yaml sync
+
       - name: Run chart-testing (install)
         run: ct install

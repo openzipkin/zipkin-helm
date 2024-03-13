@@ -58,6 +58,17 @@ service:
   type: ClusterIP
   port: 9411
 
+serviceMonitor:
+  # Creates a ServiceMonitor to scrape /prometheus
+  enabled: false
+  # Namespace to create the service monitor in
+  namespace: ""
+  #  interval: 10s
+  #  scrapeTimeout: 10s
+  # Add any labels required by your prometheus spec serviceMonitorSelector
+  labels: {}
+  #    release: prometheus
+
 ingress:
   enabled: false
   annotations:

@@ -1,0 +1,56 @@
+---
+# install via `helmfile -f charts/zipkin/ci/helmfile.yaml sync`
+repositories:
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
+
+# Prometheus requires the CRD servicemonitors.monitoring.coreos.com as well as
+# Prometheus, deployed as the service named "prometheus-operated" in our test
+# namespace "ci-monitoring". We set this up via helm prior to running tests, as
+# adding CRDs and multiple resources during a test is far more complicated.
+releases:
+  - name: prometheus-stack
+    namespace: ci-monitoring  # arbitrary non-default name
+    createNamespace: true
+    chart: prometheus-community/kube-prometheus-stack
+    values:
+      - prometheusOperator:
+          enabled: true
+        prometheus:
+          enabled: true
+          # By default, the service monitor has namespace restrictions and must
+          # match a label "release: kube-prometheus-stack". Relax for testing.
+          # See https://prometheus-operator.dev/docs/operator/troubleshooting/#it-is-in-the-configuration-but-not-on-the-service-discovery-page
+          prometheusSpec:
+            serviceMonitorNamespaceSelector:
+              any: true
+            serviceMonitorSelector:
+              any: true
+            serviceMonitorSelectorNilUsesHelmValues: false
+        # Disable anything else, like multi-container grafana pods.
+        defaultRules:
+          enabled: false
+        alertmanager:
+          enabled: false
+        kubeApiServer:
+          enabled: false
+        kubelet:
+          enabled: false
+        kubeControllerManager:
+          enabled: false
+        coreDns:
+          enabled: false
+        kubeDns:
+          enabled: false
+        kubeEtcd:
+          enabled: false
+        kubeScheduler:
+          enabled: false
+        kubeProxy:
+          enabled: false
+        kubeStateMetrics:
+          enabled: false
+        nodeExporter:
+          enabled: false
+        grafana:
+          enabled: false
