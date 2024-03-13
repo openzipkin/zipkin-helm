@@ -4,9 +4,10 @@ repositories:
   - name: prometheus-community
     url: https://prometheus-community.github.io/helm-charts
 
-# Prometheus is too much to configure manually in a test yaml. We need the CRD
-# servicemonitors.monitoring.coreos.com as well as Prometheus, deployed as the
-# service named "prometheus-operated" in our test namespace "ci-monitoring"
+# Prometheus requires the CRD servicemonitors.monitoring.coreos.com as well as
+# Prometheus, deployed as the service named "prometheus-operated" in our test
+# namespace "ci-monitoring". We set this up via helm prior to running tests, as
+# adding CRDs and multiple resources during a test is far more complicated.
 releases:
   - name: prometheus-stack
     namespace: ci-monitoring  # arbitrary non-default name
