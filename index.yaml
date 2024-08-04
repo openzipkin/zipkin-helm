@@ -2,6 +2,19 @@ apiVersion: v1
 entries:
   zipkin:
   - apiVersion: v2
+    appVersion: 3.4.1
+    created: "2024-08-04T08:38:49.998994152Z"
+    description: A Zipkin helm chart for kubernetes
+    digest: 2f13e70a3fa9cd699fe438ced74472afc931a6a2b9f28512f30f7374dec1a32b
+    maintainers:
+    - email: zipkin-dev@googlegroups.com
+      name: openzipkin
+    name: zipkin
+    type: application
+    urls:
+    - https://github.com/openzipkin/zipkin-helm/releases/download/zipkin-0.3.4/zipkin-0.3.4.tgz
+    version: 0.3.4
+  - apiVersion: v2
     appVersion: 3.3.1
     created: "2024-05-25T11:58:59.970244799Z"
     description: A Zipkin helm chart for kubernetes
@@ -131,4 +144,4 @@ entries:
     urls:
     - https://github.com/openzipkin/zipkin-helm/releases/download/zipkin-0.1.0/zipkin-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-25T11:58:59.970310091Z"
+generated: "2024-08-04T08:38:49.999036451Z"
