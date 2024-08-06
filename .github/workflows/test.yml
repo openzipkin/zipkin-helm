@@ -31,7 +31,7 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: Set up Helm
-        uses: azure/setup-helm@v3
+        uses: azure/setup-helm@v4
         with:
           version: v3.14.1
 
@@ -41,21 +41,23 @@ jobs:
           python-version: '3.10'
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2
+        # See please https://github.com/helm/chart-testing-action/issues/140
+        uses: helm/chart-testing-action@v2.6.1
 
       - name: Run chart-testing (list-changed)
         id: list-changed
         run: |
           changed=$(ct list-changed)
           if [[ -n "$changed" ]]; then
-            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Run chart-testing (lint)
         run: ct lint --config .github/ct.yml
+        if: steps.list-changed.outputs.changed == 'true'
 
       - name: Create kind cluster
-        uses: helm/kind-action@v1
+        uses: helm/kind-action@v1.10.0
         if: steps.list-changed.outputs.changed == 'true'
 
       - name: Setup helmfile
@@ -63,6 +65,8 @@ jobs:
 
       - name: Install prometheus
         run: helmfile -f charts/zipkin/ci/helmfile.yaml sync
+        if: steps.list-changed.outputs.changed == 'true'
 
       - name: Run chart-testing (install)
+        if: steps.list-changed.outputs.changed == 'true'
         run: ct install
