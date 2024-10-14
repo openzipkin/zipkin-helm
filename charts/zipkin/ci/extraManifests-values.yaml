@@ -1,0 +1,13 @@
+extraManifests:
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: some-config
+    data:
+      example: true
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: some-other-config
+    data:
+      example: true
