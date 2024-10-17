@@ -74,6 +74,9 @@ You can then run `helm search repo zipkin` to see the charts.
 | zipkin.storage.elasticsearch.username      | string | no default                         | Basic authentication of X-Pack security                                                                                                                                                                                                                                                                                                      |
 | zipkin.storage.elasticsearch.password      | string | no default                         | Basic authentication of X-Pack security                                                                                                                                                                                                                                                                                                      |
 | zipkin.storage.type                        | string | `"mem"`                            |                                                                                                                                                                                                                                                                                                                                              |
+| extraManifests                    | list | `[]` |   Extra manifests to deploy with the helm chart |
+
+
 
 The values are validated using a JSON schema, which contains logic to enforce either:
 
