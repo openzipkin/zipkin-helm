@@ -143,3 +143,12 @@ extraServicePorts: []
 
 # global variables to use in values. typically used in tests.
 global: {}
+
+# extra manifests to deploy with the helm chart
+extraManifests: []
+  # - apiVersion: v1
+  #   kind: ConfigMap
+  #   metadata:
+  #     name: some-config
+  #   data:
+  #     example: true

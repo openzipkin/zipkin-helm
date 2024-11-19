@@ -300,6 +300,9 @@
                     "type": "object"
                 }
             }
+        },
+        "extraManifests": {
+            "type": "object"
         }
     }
 }
