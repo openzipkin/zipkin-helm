@@ -57,6 +57,7 @@ securityContext:
 service:
   type: ClusterIP
   port: 9411
+  annotations: {}
 
 serviceMonitor:
   # Creates a ServiceMonitor to scrape /prometheus
