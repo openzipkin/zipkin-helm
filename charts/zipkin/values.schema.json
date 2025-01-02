@@ -281,7 +281,7 @@
                             "required": ["hosts"]
                         },
                         "type": {
-                            "enum": ["mem", "elasticsearch"]
+                            "enum": ["mem", "elasticsearch", "stackdriver"]
                         }
                     },
                     "anyOf": [
@@ -296,6 +296,12 @@
                                 "type": {"const": "elasticsearch"}
                             },
                             "required": ["elasticsearch"]
+                        },
+                        {
+                            "properties": {
+                                "type": {"const": "stackdriver"}
+                            },
+                            "required": []
                         }
                     ]
                 },
