@@ -172,6 +172,10 @@
         "service": {
             "type": "object",
             "properties": {
+                "externalTrafficPolicy": {
+                    "type": "string",
+                    "enum": ["Cluster", "Local", ""]
+                },
                 "port": {
                     "type": "integer"
                 },
