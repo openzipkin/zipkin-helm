@@ -173,8 +173,7 @@
             "type": "object",
             "properties": {
                 "externalTrafficPolicy": {
-                    "type": "string",
-                    "enum": ["Cluster", "Local", ""]
+                    "type": "string"
                 },
                 "port": {
                     "type": "integer"
