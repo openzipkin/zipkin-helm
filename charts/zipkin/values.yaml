@@ -18,6 +18,15 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+# Image for use in helm.sh/hook: test
+testImage:
+  # The image registry to use
+  registry: ghcr.io
+  # The image repository to use
+  repository: openzipkin/alpine
+  # The image tag to use
+  tag: "3.19.1"
+
 # Zipkin start command
 command: ["start-zipkin"]
 # Arguments to pass to the zipkin start command
