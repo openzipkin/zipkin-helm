@@ -94,6 +94,17 @@ Add extra containers to the pod spec
 {{- end }}
 
 {{/*
+Add extra init containers to the pod spec
+*/}}
+{{- define "zipkin.extraInitContainers" -}}
+{{- if .Values.extraInitContainers }}
+{{- with .Values.extraInitContainers }}
+{{- toYaml . | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
 Add extra ports to the pod spec
 */}}
 {{- define "zipkin.extraServicePorts" -}}
