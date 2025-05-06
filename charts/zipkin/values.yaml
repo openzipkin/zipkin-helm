@@ -147,6 +147,16 @@ extraInitContainers:
     image: busybox:1.28
     command: ['sh', '-c', "echo Init container works; done"]
 
+# Extra volumes to be created
+volumes:
+ - name: shared-data
+   emptyDir: {}
+
+# Extra volumes to be mounted on the deployment
+volumeMounts:
+- name: shared-data
+  mountPath: /env
+
 # The below are typically only used in tests:
 # extra containers to add to the same pod.
 extraContainers: []
