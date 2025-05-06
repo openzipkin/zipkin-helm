@@ -133,20 +133,13 @@ zipkin:
 #    JAVA_OPTS: "-Xms128m -Xmx512m -XX:+ExitOnOutOfMemoryError"
 
 # extra init containers to add to the same pod.
-extraInitContainers:
-  - name: init-myservice
-    image: busybox:1.28
-    command: ['sh', '-c', "echo Init container works; done"]
+extraInitContainers: []
 
 # Extra volumes to be created
-volumes:
- - name: shared-data
-   emptyDir: {}
+volumes: []
 
 # Extra volumes to be mounted on the deployment
-volumeMounts:
-- name: shared-data
-  mountPath: /env
+volumeMounts: []
 
 # The below are typically only used in tests:
 # extra containers to add to the same pod.
