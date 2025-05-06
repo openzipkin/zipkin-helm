@@ -11,4 +11,3 @@ extraManifests:
       name: some-other-config
     data:
       example: true
-
