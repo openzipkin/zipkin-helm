@@ -42,6 +42,8 @@ spec:
       serviceAccountName: {{ include "zipkin.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        {{- include "zipkin.extraInitContainers" . | nindent 6 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
