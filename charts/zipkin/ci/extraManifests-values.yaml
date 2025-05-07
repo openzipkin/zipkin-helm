@@ -4,10 +4,10 @@ extraManifests:
     metadata:
       name: some-config
     data:
-      example: true
+      example: "some-example-data"
   - apiVersion: v1
     kind: ConfigMap
     metadata:
       name: some-other-config
     data:
-      example: true
+      example: "some-other-config"
