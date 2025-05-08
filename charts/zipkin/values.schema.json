@@ -82,6 +82,20 @@
                 }
             }
         },
+        "testImage": {
+            "type": "object",
+            "properties": {
+                "registry": {
+                    "type": "string"
+                },
+                "repository": {
+                    "type": "string"
+                },
+                "tag": {
+                    "type": "string"
+                }
+            }
+        },
         "imagePullSecrets": {
             "type": "array"
         },
@@ -173,8 +187,7 @@
             "type": "object",
             "properties": {
                 "externalTrafficPolicy": {
-                    "type": "string",
-                    "enum": ["Cluster", "Local", ""]
+                    "type": "string"
                 },
                 "port": {
                     "type": "integer"
