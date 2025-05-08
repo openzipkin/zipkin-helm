@@ -42,6 +42,8 @@ spec:
       serviceAccountName: {{ include "zipkin.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        {{- include "zipkin.extraInitContainers" . | nindent 6 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -119,6 +121,10 @@ spec:
             periodSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            {{- with .Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
         {{- include "zipkin.extraContainers" . | nindent 6 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -135,3 +141,7 @@ spec:
       {{- if .Values.priorityClassName }}
       priorityClassName: {{ .Values.priorityClassName }}
       {{- end }}
+      volumes:
+        {{- with .Values.volumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
