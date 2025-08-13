@@ -329,6 +329,15 @@
         },
         "extraManifests": {
             "type": "array"
+        },
+        "volumes": {
+            "type": "array"
+        },
+        "volumeMounts": {
+            "type": "array"
+        },
+        "extraInitContainers": {
+            "type": "array"
         }
     }
 }

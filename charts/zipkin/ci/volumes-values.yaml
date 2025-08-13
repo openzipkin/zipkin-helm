@@ -1,0 +1,7 @@
+volumes:
+ - name: shared-data
+   emptyDir: {}
+
+volumeMounts:
+- name: shared-data
+  mountPath: /env
