@@ -10,10 +10,10 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # Prevent use of implicit GitHub Actions read-only token GITHUB_TOKEN.
           token: ${{ secrets.GH_TOKEN }}
@@ -24,12 +24,13 @@ jobs:
           git config user.email "zipkinci+zipkin-dev@googlegroups.com"
 
       - name: Get latest zipkin version
-        uses: oprypin/find-latest-tag@v1
-        with:
-          repository: openzipkin/zipkin
-          releases-only: true
-          regex: '^\d+\.\d+\.\d+$'
         id: appVersion
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG=$(gh release list --repo openzipkin/zipkin --exclude-drafts --exclude-pre-releases \
+            -L 100 --json tagName --jq '[.[] | select(.tagName | test("^\\d+\\.\\d+\\.\\d+$"))][0].tagName')
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
 
       - name: Prepare release
         env:
@@ -45,7 +46,7 @@ jobs:
           build-bin/helm/helm_prepare $(echo ${GITHUB_REF} | cut -d/ -f 3) ${{ steps.appVersion.outputs.tag }}
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.6.0
+        uses: helm/chart-releaser-action@v1.7.0
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
@@ -54,7 +55,7 @@ jobs:
         run: echo "tag=$(echo ${GITHUB_REF} | cut -d/ -f 3)" >> $GITHUB_OUTPUT
 
       - name: Removes trigger target
-        uses: dev-drprasad/delete-tag-and-release@v1.0
-        with:
-          tag_name: ${{ steps.trigger-tag.outputs.tag }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete ${{ steps.trigger-tag.outputs.tag }} --cleanup-tag --yes 2>&1 || true
