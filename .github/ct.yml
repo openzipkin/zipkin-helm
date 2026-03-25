@@ -1,1 +1,2 @@
 check-version-increment: false
+target-branch: master

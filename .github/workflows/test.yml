@@ -18,10 +18,10 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: '0'  # to see origin/master
 
@@ -31,23 +31,22 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: Set up Helm
-        uses: azure/setup-helm@v4
+        uses: azure/setup-helm@v5
         with:
-          version: v3.14.1
+          version: v3.20.1
 
       - name: Install python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.10'
 
       - name: Set up chart-testing
-        # See please https://github.com/helm/chart-testing-action/issues/140
-        uses: helm/chart-testing-action@v2.6.1
+        uses: helm/chart-testing-action@v2.8.0
 
       - name: Run chart-testing (list-changed)
         id: list-changed
         run: |
-          changed=$(ct list-changed)
+          changed=$(ct list-changed --config .github/ct.yml)
           if [[ -n "$changed" ]]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
@@ -57,11 +56,15 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
 
       - name: Create kind cluster
-        uses: helm/kind-action@v1.10.0
+        uses: helm/kind-action@v1.14.0
         if: steps.list-changed.outputs.changed == 'true'
 
       - name: Setup helmfile
-        uses: mamezou-tech/setup-helmfile@v2.0.0
+        uses: mamezou-tech/setup-helmfile@v2.2.0
+        with:
+          helm-diff-plugin-version: v3.15.3
+          install-helm: no
+          install-kubectl: no
 
       - name: Install prometheus
         run: helmfile -f charts/zipkin/ci/helmfile.yaml sync
@@ -69,4 +72,4 @@ jobs:
 
       - name: Run chart-testing (install)
         if: steps.list-changed.outputs.changed == 'true'
-        run: ct install
+        run: ct install --config .github/ct.yml
